@@ -1,5 +1,5 @@
 import { Commitment, Connection, Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js"
-import wallet from "../turbin3-wallet.json"
+import wallet from "/home/ghostgamer/.config/solana/id.json"
 import { getOrCreateAssociatedTokenAccount, transfer } from "@solana/spl-token";
 
 // We're going to import our keypair from the wallet file
@@ -10,19 +10,24 @@ const commitment: Commitment = "confirmed";
 const connection = new Connection("https://api.devnet.solana.com", commitment);
 
 // Mint address
-const mint = new PublicKey("<mint address>");
+const mint = new PublicKey("E7xrcPZKwVUqPn6tnjvdgi9tqQ7U8scGzLdiJB27eQsG");
 
 // Recipient address
-const to = new PublicKey("<receiver address>");
+const to = new PublicKey("3KQh4rmx2p6S8ML45sgGwT4EYqmfqwj7ciwg58RufAvN");
+const token_decimals = 1_000_000;
 
 (async () => {
     try {
         // Get the token account of the fromWallet address, and if it does not exist, create it
+        const fromAta = await getOrCreateAssociatedTokenAccount(connection, keypair, mint, keypair.publicKey);
 
         // Get the token account of the toWallet address, and if it does not exist, create it
+        const toAta = await getOrCreateAssociatedTokenAccount(connection, keypair, mint, to)
 
         // Transfer the new token to the "toTokenAccount" we just created
-    } catch(e) {
+        const tx = await transfer(connection, keypair, fromAta.address, toAta.address, keypair, 10 * token_decimals)
+        console.log(`txid: ${tx}`)
+    } catch (e) {
         console.error(`Oops, something went wrong: ${e}`)
     }
 })();

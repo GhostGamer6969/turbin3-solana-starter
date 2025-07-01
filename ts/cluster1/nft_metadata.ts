@@ -39,7 +39,7 @@ umi.use(signerIdentity(signer));
         // const myUri = ???
         // console.log("Your metadata URI: ", myUri);
     }
-    catch(error) {
+    catch (error) {
         console.log("Oops.. Something went wrong", error);
     }
 })();
